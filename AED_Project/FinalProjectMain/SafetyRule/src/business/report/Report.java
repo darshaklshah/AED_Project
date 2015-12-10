@@ -19,7 +19,8 @@ public class Report {
     private static int count = 1;
     
     public Report(){
-        eventID = count++;
+        ++count;
+        eventID=count;
         
     }
 

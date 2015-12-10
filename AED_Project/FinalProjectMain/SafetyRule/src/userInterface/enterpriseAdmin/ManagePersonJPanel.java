@@ -240,15 +240,29 @@ public class ManagePersonJPanel extends javax.swing.JPanel {
         String position = (String)positionJComboBox.getSelectedItem();
         Organization org = (Organization) orgJComboBox.getSelectedItem();
         Person person = org.getPersonDirectory().createPerson(name);
+        if (checkBlankInput()) {
         person.setPhone(phone);
         person.setEmail(email);
         person.setPosition(position);
+        popTableData();
+        }
+        else{
+             JOptionPane.showMessageDialog(null, "Input all fields");
+        }
         nameJTextField.setText("");
         phoneJTextField.setText("");
         emailJTextField.setText("");
-        popTableData();
+        
     }//GEN-LAST:event_createJButtonActionPerformed
-
+    private Boolean checkBlankInput() {
+        if (phoneJTextField.getText().length()==0
+                || emailJTextField.getText().length() == 0
+                || nameJTextField.getText().length() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back2JButton;
     private javax.swing.JButton createJButton;

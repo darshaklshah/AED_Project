@@ -20,7 +20,7 @@ public class ConfigureASystem {
         
         Person architect = new Person("Darshak");
         architect.setEmail("shah.da@husky.neu.edu");
-        architect.setPhone("8052147639");
+        architect.setPhone("8573087702");
         architect.setPosition("Architect");
         
         UserAccount userAccount = new UserAccount();

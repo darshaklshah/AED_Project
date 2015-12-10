@@ -11,8 +11,13 @@ import business.network.Network;
 import business.organization.Organization;
 import business.userAccount.UserAccount;
 import java.awt.CardLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import userInterface.register.RegisterJPanel;
 
 /**
@@ -27,9 +32,9 @@ public class MainJFrame extends javax.swing.JFrame {
     private HealthSystem system;
     private DB4OUtil db = new DB4OUtil();
     
-    public MainJFrame() {
+    public MainJFrame() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         initComponents();
-        
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         system = db.retrieveSystem();
         
     }
@@ -53,6 +58,7 @@ public class MainJFrame extends javax.swing.JFrame {
         logoutJButton = new javax.swing.JButton();
         registerJButton = new javax.swing.JButton();
         container = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +74,7 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         logoutJButton.setText("Log out");
+        logoutJButton.setEnabled(false);
         logoutJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logoutJButtonActionPerformed(evt);
@@ -123,6 +130,13 @@ public class MainJFrame extends javax.swing.JFrame {
         jSplitPane1.setLeftComponent(jPanel1);
 
         container.setLayout(new java.awt.CardLayout());
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel4.setForeground(java.awt.Color.red);
+        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\darsh\\Documents\\AED\\shah_darshak_001669665\\AED_Project\\FinalProjectMain\\The Key to Quality.jpg")); // NOI18N
+        jLabel4.setText("Health Safety Report");
+        container.add(jLabel4, "card3");
+
         jSplitPane1.setRightComponent(container);
 
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
@@ -133,9 +147,11 @@ public class MainJFrame extends javax.swing.JFrame {
     private void loginJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginJButtonActionPerformed
         // TODO add your handling code here:
         String userName = userNameJTextField.getText();
-        String password = passwordJPasswordField.getText();
+        char[] passwordCharArray = passwordJPasswordField.getPassword();
+        String password = String.valueOf(passwordCharArray);
         
-        UserAccount userAccount = system.authenticateUser(userName, password);
+        
+        UserAccount userAccount = system.getUserAccountDirectory().authenticateUser(userName, password);
         Enterprise inEnterprise = null;
         Organization inOrganization = null;
         if(userAccount == null){
@@ -195,18 +211,45 @@ public class MainJFrame extends javax.swing.JFrame {
     
         if(userAccount==null){
             JOptionPane.showMessageDialog(null, "Invalid Credentials!");
+            
+            loginJButton.setEnabled(true);
+            logoutJButton.setEnabled(false);
+            
+            userNameJTextField.setEnabled(true);
+        passwordJPasswordField.setEnabled(true);
         }else{
+            
+            loginJButton.setEnabled(false);
+            logoutJButton.setEnabled(true);
+        
+            userNameJTextField.setEnabled(false);
+        passwordJPasswordField.setEnabled(false);
+        
             CardLayout layout = (CardLayout) container.getLayout();
             container.add("workArea", userAccount.getRole().createWorkArea(container, userAccount,inOrganization, inEnterprise, system));
             layout.next(container);
         }
+//        loginJButton.setEnabled(false);
+//        logoutJButton.setEnabled(true);
+//        userNameJTextField.setEnabled(false);
+//        passwordJPasswordField.setEnabled(false);
     }//GEN-LAST:event_loginJButtonActionPerformed
 
     private void logoutJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutJButtonActionPerformed
         // TODO add your handling code here:
-        container.removeAll();
+       
+        logoutJButton.setEnabled(false);
+        userNameJTextField.setEnabled(true);
+        passwordJPasswordField.setEnabled(true);
+        loginJButton.setEnabled(true);
+        
         userNameJTextField.setText("");
         passwordJPasswordField.setText("");
+         container.removeAll();
+         JPanel blankJP = new JPanel();
+        container.add("blank", blankJP);
+        CardLayout crdLyt = (CardLayout) container.getLayout();
+        crdLyt.next(container);
         db.storeSystem(system);
     }//GEN-LAST:event_logoutJButtonActionPerformed
 
@@ -248,7 +291,18 @@ public class MainJFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                MainJFrame f = new MainJFrame();
+                MainJFrame f = null;
+                try {
+                    f = new MainJFrame();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 f.setVisible(true);
                 f.setSize(800,600);
 //                f.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -259,6 +313,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JPanel container;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JButton loginJButton;
