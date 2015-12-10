@@ -534,9 +534,14 @@ public class ReportStepOneJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         String productName = productNameJTextField.getText();
         Product.ProductType type = (Product.ProductType) productTypeJComboBox.getSelectedItem();
+        if(productName.trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Enter product name");
+        }
+        else{
         products.createProduct(productName, type);
         productNameJTextField.setText("");
         popTableData();
+        }
     }//GEN-LAST:event_addProductJButtonActionPerformed
 
     private void nextJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextJButtonActionPerformed
